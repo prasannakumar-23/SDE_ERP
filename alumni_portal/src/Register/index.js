@@ -1,18 +1,54 @@
 import React from 'react'
+import axios from "axios";
 import { useRef, useState, useEffect } from "react";
 
 
 const Register=()=>{
 const [name,setName]=useState("");
 const [rollNumber,setRollNumber]=useState("");
+const [email,setEmail]=useState("");
 const [batch,setBatch]=useState("");
 const [gender,setGender]=useState("");
 const [degree,setDegree]=useState("");
 const [branch,setBranch]=useState("");
 const [occupation,setOccupation]=useState("");
+const [password, setPassword] = useState('');
+const [cPassword, setCPassword] = useState('');
+const [showErrorMessage, setShowErrorMessage] = useState(false);
+const [cPasswordClass, setCPasswordClass] = useState('form-control');
+const [isCPasswordDirty, setIsCPasswordDirty] = useState(false);
 const handleSubmit=()=>{
-
+    const newStudent={
+      name: name,
+      rollnumber:rollNumber,
+      email: email,
+      batch:batch,
+      gender:gender,
+      degree: degree,
+      branch: branch,
+      occupation: occupation,
+      password: password
+    };
+    console.log("Were");
+    axios.post("/register",newStudent);
   }
+
+const handleCPassword = (e) => {
+    setCPassword(e.target.value);
+    setIsCPasswordDirty(true);
+}
+
+useEffect(() => {
+  if (isCPasswordDirty) {
+      if (password === cPassword) {
+          setShowErrorMessage(false);
+          setCPasswordClass('form-control is-valid')
+      } else {
+          setShowErrorMessage(true)
+          setCPasswordClass('form-control is-invalid')
+      }
+  }
+}, [cPassword])
 
 return (
     <div className="center">
@@ -27,6 +63,11 @@ return (
         <input type="text"  onChange={(e)=>{setRollNumber(e.target.value);}}/>
         <span></span>
         <label>Enrollment Number </label>
+        </div>
+        <div className="txt_field">
+        <input type="email"  onChange={(e)=>{setEmail(e.target.value);}}/>
+        <span></span>
+        <label>Email</label>
         </div>
         <div className="txt_field">
         <input type="text"  onChange={(e)=>{setBatch(e.target.value);}}/>
@@ -60,6 +101,11 @@ return (
         </label>
         <label>Occupation </label>
         <input type="text" placeholder="Enter your occupation" onChange={(e)=>{setOccupation(e.target.value);}}/>
+        <label>Password</label>
+        <input type="password" placeholder="Enter your Password" value={password} onChange={(e) => { setPassword(e.target.value) }}></input>
+        <label>Confirm Password</label>
+        <input type="password" placeholder="Enter your Password again...." value={cPassword} onChange={handleCPassword}></input>
+        {showErrorMessage && isCPasswordDirty ? <div> Passwords did not match </div> : ''}
         <button type="submit"  onClick={handleSubmit}>Submit</button>
       </div>
     </div>
