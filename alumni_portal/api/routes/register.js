@@ -15,26 +15,15 @@ router.post("/",async(req,res)=>{
         // const salt=await bcrypt.genSalt(10);
         // const hashedPass=await bcrypt.hash(req.body.password,salt)
         console.log(req.body);
-        const newUser=new User({
-            // name:req.body.name,
-            // email:req.body.email,
-            // rollnumber:req.body.rollnumber,
-            // batch:req.body.batch,
-            // gender:req.body.gender,
-            // degree:req.body.degree,
-            // branch:req.body.branch,
-            // occupation:req.body.occupation,
-            // password:req.body.password
-            req.body
-        });
+        const newUser=new User(req.body);
         console.log(newUser.name);
-        newUser.save();
+        const user=await newUser.save();
         console.log("errorrrrrr");
-        res.status(200).json(newUser);
+        res.status(200).json(user);
     }catch(err){
         console.log(err);
         res.status(500).json(err);
-    }
-});
+    }});
+
 
 module.exports=router
